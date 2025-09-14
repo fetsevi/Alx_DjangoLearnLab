@@ -26,3 +26,20 @@ def edit_book(request, pk):
 def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     return HttpResponse(f"You can delete the book: {book.title}")
+
+
+from django.shortcuts import render
+from django.db.models import Q
+from .models import Book
+from .forms import BookSearchForm
+
+def search_books(request):
+    form = BookSearchForm(request.GET or None)
+    books = []
+    if form.is_valid():
+        query = form.cleaned_data["query"]
+        # Safe ORM query (prevents SQL injection)
+        books = Book.objects.filter(
+            Q(title__icontains=query) | Q(author__icontains=query)
+        )
+    return render(request, "bookshelf/book_list.html", {"form": form, "books": books})
