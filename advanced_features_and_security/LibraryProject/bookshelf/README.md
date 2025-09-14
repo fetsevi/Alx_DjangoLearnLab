@@ -49,5 +49,4 @@ Defined in `Book` model:
   - `SECURE_BROWSER_XSS_FILTER = True`
 - Certificates are managed via Let's Encrypt (Certbot).
 - Production server runs behind Nginx with SSL termination.
-# Tell Django it is behind a proxy that sets the X-Forwarded-Proto header
-["SECURE_PROXY_SSL_HEADER", "HTTP_X_FORWARDED_PROTO"]
+
