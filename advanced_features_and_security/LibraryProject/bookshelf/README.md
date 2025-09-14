@@ -37,3 +37,16 @@ Defined in `Book` model:
 4. **Content Security Policy (CSP)**
    - Implemented using django-csp middleware to prevent XSS.
 
+
+# HTTPS & Security Configuration
+
+- All HTTP requests are redirected to HTTPS (`SECURE_SSL_REDIRECT = True`).
+- HSTS is enabled for 1 year with subdomains included and preload set.
+- Session and CSRF cookies are secure-only.
+- Security headers enabled:
+  - `X_FRAME_OPTIONS = DENY` (clickjacking protection)
+  - `SECURE_CONTENT_TYPE_NOSNIFF = True`
+  - `SECURE_BROWSER_XSS_FILTER = True`
+- Certificates are managed via Let's Encrypt (Certbot).
+- Production server runs behind Nginx with SSL termination.
+
