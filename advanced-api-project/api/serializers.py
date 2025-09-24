@@ -20,7 +20,7 @@ class BookSerializer(serializers.ModelSerializer):
 # so that related books appear inline.
 
 class AuthorSerializer(serializers.ModelSerializer):
-    books = BookSerializer(many = True, read_only = True) # Nested serializer
+    books = BookSerializer(many=True, read_only=True) # Nested serializer
     
     class Meta:
         model = Author
