@@ -7,9 +7,9 @@ urlpatterns = [
     path('', views.PostListView.as_view(), name='posts'),
     path('posts/', views.PostListView.as_view(), name='posts'),
     path('post/new/', views.PostCreateView.as_view(), name='post_create'),
-    path('posts/<int:pk>', views.PostDetailView.as_view(), name='post_detail'),
-    path('posts/<int:pk>/update/', views.PostUpdateView.as_view(), name='post_update'),
-    path('posts/<int:pk>/delete', views.PostDeleteView.as_view(), name='post_delete'),
+    path('post/<int:pk>', views.PostDetailView.as_view(), name='post_detail'),
+    path('post/<int:pk>/update/', views.PostUpdateView.as_view(), name='post_update'),
+    path('post/<int:pk>/delete', views.PostDeleteView.as_view(), name='post_delete'),
                    
                    # Login, Register Url
     path("login/", auth_views.LoginView.as_view(template_name="blog/login.html"), name="login"),
