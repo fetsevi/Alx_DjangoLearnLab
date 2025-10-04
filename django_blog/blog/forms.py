@@ -1,6 +1,7 @@
 # Blog forms
 from django import forms
-from .models import Post, Comment, Tag
+from .models import Post, Comment
+from taggit.forms import TagWidget
 
 class PostForm(forms.ModelForm):
     # comma-separated tags input
@@ -16,6 +17,7 @@ class PostForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter post title'}),
             'content': forms.Textarea(attrs={'rows': 10, 'placeholder': 'Write your post content....'}),
+            'tags': TagWidget(),
         }
         
     def __init__(self, *args, **kwargs):
