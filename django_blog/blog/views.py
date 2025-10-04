@@ -136,7 +136,7 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.get_object().post.get_absolute_url()
     
 # Search view (GET ?q=your+query)
-def search(request):
+def search_posts(request):
     query = request.GET.get('q', '').strip()
     results = Post.objects.none()
     if query:
@@ -153,7 +153,7 @@ def search(request):
 
 
 # Posts filtered by tag name
-def posts_by_tag(request, tag_name):
+def PostByTagListView(request, tag_name):
     tag = get_object_or_404(Tag, name=tag_name)
     posts = tag.posts.all()
     context = {

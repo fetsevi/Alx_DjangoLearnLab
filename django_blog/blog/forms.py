@@ -1,6 +1,6 @@
 # Blog forms
 from django import forms
-from .models import Post, Comment
+from .models import Post, Comment, Tag
 from taggit.forms import TagWidget
 
 class PostForm(forms.ModelForm):
