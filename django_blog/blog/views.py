@@ -7,7 +7,7 @@ from django.contrib import messages
 from django import forms
 
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post, Comment
@@ -99,17 +99,17 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     template_name = 'blog/comment_form.html'  # used if you want a separate page (we also support inline form)
 
     def dispatch(self, request, *args, **kwargs):
-        # capture post for which the comment is being created
-        self.post = get_object_or_404(Post, pk=self.kwargs.get('pk'))
+        #  store the post object so we can reuse it
+        self.post_obj = get_object_or_404(Post, pk=self.kwargs.get('pk'))
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.post = self.post
+        form.instance.post = self.post_obj
         return super().form_valid(form)
 
     def get_success_url(self):
-        return self.post.get_absolute_url()
+        return self.post_obj.get_absolute_url()
 
 
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
