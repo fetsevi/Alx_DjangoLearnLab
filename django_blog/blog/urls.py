@@ -12,9 +12,9 @@ urlpatterns = [
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post_delete'), 
     
     # comment URLs
-    path("post/<int:post_pk>/comment/new/", views.CommentCreateView.as_view(), name="comment_create"),
-    path("comment/<int:pk>/update/", views.CommentUpdateView.as_view(), name="comment_update"),
-    path("comment/<int:pk>/delete/", views.CommentDeleteView.as_view(), name="comment_delete"),              
+    path("post/<int:post_pk>/comments/new/", views.CommentCreateView.as_view(), name="comment_create"),
+    path("comments/<int:pk>/edit/", views.CommentUpdateView.as_view(), name="comment_update"),
+    path("comments/<int:pk>/delete/", views.CommentDeleteView.as_view(), name="comment_delete"),              
     
     # Login, Register Url
     path("login/", auth_views.LoginView.as_view(template_name="blog/login.html"), name="login"),
