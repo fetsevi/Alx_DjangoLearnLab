@@ -100,7 +100,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         # capture post for which the comment is being created
-        self.post = get_object_or_404(Post, pk=self.kwargs.get('post_pk'))
+        self.post = get_object_or_404(Post, pk=self.kwargs.get('pk'))
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
