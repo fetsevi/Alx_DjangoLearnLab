@@ -22,4 +22,8 @@ urlpatterns = [
     path("register/", views.register, name="register"),
     path("profile/", views.profile, name="profile"),
     
+    # tagging & search
+    path('tags/<str:tag_name>/', views.posts_by_tag, name='posts_by_tag'),
+    path('search/', views.search, name='search'),
+    
 ]

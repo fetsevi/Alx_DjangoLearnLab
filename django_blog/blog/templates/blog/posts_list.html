@@ -6,6 +6,7 @@
 {% if posts %}
     <ul class="post-list">
         {% for post in posts %}
+
             <li>
                 <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
                 <p class="meta">By {{ post.author.username }} — {{ post.published_date|date:"M j, Y" }}</p>
@@ -18,6 +19,18 @@
                     </p>
                 {% endif %}
             </li>
+            <article>
+                <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+                <p>{{ post.content|truncatewords:30 }}</p>
+                <p>
+                  Tags:
+                  {% for tag in post.tags.all %}
+                    <a href="{% url 'posts_by_tag' tag.name %}">#{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+                  {% empty %}
+                    <span>No tags</span>
+                  {% endfor %}
+                </p>
+            </article>
         {% endfor %}
     </ul>
 
@@ -43,3 +56,4 @@
     <p><a href="{% url 'login' %}">Log in</a> to create posts.</p>
 {% endif %}
 {% endblock %}
+

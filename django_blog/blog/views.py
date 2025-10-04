@@ -6,11 +6,12 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django import forms
 
+from django.db.models import Q
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Comment
+from .models import Post, Comment, Tag
 from .forms import PostForm, CommentForm
 
 # Extending UserCreationForm to add email field
@@ -134,6 +135,31 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def get_success_url(self):
         return self.get_object().post.get_absolute_url()
     
-    
+# Search view (GET ?q=your+query)
+def search(request):
+    query = request.GET.get('q', '').strip()
+    results = Post.objects.none()
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+    context = {
+        'query': query,
+        'posts': results,
+    }
+    return render(request, 'blog/search_results.html', context)
+
+
+# Posts filtered by tag name
+def posts_by_tag(request, tag_name):
+    tag = get_object_or_404(Tag, name=tag_name)
+    posts = tag.posts.all()
+    context = {
+        'tag': tag,
+        'posts': posts,
+    }
+    return render(request, 'blog/posts_by_tag.html', context)    
     
             
