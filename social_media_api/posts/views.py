@@ -1,8 +1,13 @@
-from rest_framework import viewsets, permissions, filters, generics
+from rest_framework import viewsets, permissions, filters, generics, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
-from .models import Post, Comment
+from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
+
+from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
+from notifications.models import Notification
+from django.contrib.contenttypes.models import ContentType
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
     """Custom permission only the author can edit or delete"""
@@ -23,6 +28,39 @@ class PostViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+    
+    # ✅ Like a post
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def like(self, request, pk=None):
+        post = get_object_or_404(Post, pk=pk)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+        if not created:
+            return Response({"detail": "You already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create notification
+        if post.author != request.user:
+            Notification.objects.create(
+                recipient=post.author,
+                actor=request.user,
+                verb='liked your post',
+                target=post,
+                target_content_type=ContentType.objects.get_for_model(post)
+            )
+
+        return Response({"detail": "Post liked successfully!"}, status=status.HTTP_201_CREATED)
+    
+    # ✅ Unlike a post
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def unlike(self, request, pk=None):
+        post = get_object_or_404(Post, pk=pk)
+        like = Like.objects.filter(user=request.user, post=post)
+
+        if like.exists():
+            like.delete()
+            return Response({"detail": "Post unliked successfully!"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
         
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer

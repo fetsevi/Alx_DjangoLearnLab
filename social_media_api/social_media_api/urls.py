@@ -20,5 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('accounts.urls')), # Include accounts routes
-    path('api/', include('posts.urls')),
+    path('api/', include('posts.urls')),         # Posts and Comments routes
+    path('api/notifications/', include('notifications.urls')),  # Notifications routes
 ]
