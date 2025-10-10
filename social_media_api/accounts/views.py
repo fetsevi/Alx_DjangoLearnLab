@@ -10,6 +10,11 @@ from rest_framework.views import APIView
 from .models import CustomUser
 
 User = get_user_model()
+class UserListView(generics.ListAPIView):
+    """Optional view to list all users (for testing or admin)."""
+    queryset = CustomUser.objects.all() 
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated] 
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
@@ -46,7 +51,7 @@ class LoginView(generics.GenericAPIView):
 # Followers views
 
 class FollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         """Allows the current user to follow another user."""
@@ -65,7 +70,7 @@ class FollowUserView(APIView):
         )    
 
 class UnfollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         """Allows the current user to unfollow another user."""
