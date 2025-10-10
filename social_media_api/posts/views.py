@@ -32,7 +32,7 @@ class PostViewSet(viewsets.ModelViewSet):
     # ✅ Like a post
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def like(self, request, pk=None):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         like, created = Like.objects.get_or_create(user=request.user, post=post)
 
         if not created:
@@ -53,7 +53,7 @@ class PostViewSet(viewsets.ModelViewSet):
     # ✅ Unlike a post
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def unlike(self, request, pk=None):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         like = Like.objects.filter(user=request.user, post=post)
 
         if like.exists():
